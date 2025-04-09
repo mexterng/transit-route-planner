@@ -7,7 +7,7 @@ import os
 from time import sleep
 import json
 
-def main():
+def main(useCache=False):
     # Konfiguration laden
     config = load_config_ini('config.ini')
     
@@ -42,10 +42,25 @@ def main():
         for school in schools_dict:
             school_id = school['school_id']
             school_address = school['address']
-            response = query_connection(config.api_key, student_address, school_address, config.datetime)
+            
+            # use chached responses to save api requests
+            if useCache:
+                with open(response_json_path, 'r') as file:
+                    response_dict = json.load(file)
+                response = {}
+                response['response'] = response_dict[student_id][school_id]['response']
+                response['response_time'] = response_dict[student_id][school_id]['response_time']
+                response['response']['status'] = 'OK'
+            else:
+                response = query_connection(config.api_key, student_address, school_address, config.datetime)
             
             if response['response']['status'] != 'OK':
-                student_api_fails += 1            
+                student_api_fails += 1
+                print_str = "REQUEST_FAILED"
+            else:
+                print_str = "OK"
+            print(f"{student_id} für Schule {school_id}: {print_str} ({response['response_time']})")
+            
             if student_api_fails > 5:
                 break
 
@@ -67,7 +82,7 @@ def main():
         append_output_csv(results_csv, output_csv_path)
         append_output_json(student_id, results_json, output_json_path)
 
-def reset_output_files():
+def reset_output_files(useCache=False):
     # Konfiguration laden
     config = load_config_ini('config.ini')
     
@@ -83,15 +98,17 @@ def reset_output_files():
     with open(output_json_path, 'w') as output_json_file:
         output_json_file.truncate(0)  # Datei leeren (wenn sie existiert)
         json.dump({}, output_json_file)
-        
-    with open(response_json_path, 'w') as response_json_file:
-        response_json_file.truncate(0)  # Datei leeren (wenn sie existiert)
-        json.dump({}, response_json_file)
+    
+    if not useCache:
+        with open(response_json_path, 'w') as response_json_file:
+            response_json_file.truncate(0)  # Datei leeren (wenn sie existiert)
+            json.dump({}, response_json_file)
     
     with open(output_csv_path, 'w', newline='') as output_csv_file:
         output_csv_file.truncate(0)  # Datei leeren (wenn sie existiert)
     
 
 if __name__ == '__main__':
-    reset_output_files()
-    main()
+    useChache = True
+    reset_output_files(useChache)
+    main(useChache)
