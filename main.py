@@ -6,8 +6,9 @@ import pandas as pd
 import os
 from time import sleep
 import json
+import time
 
-def main(useCache=False):
+def main(use_cache=False):
     # Konfiguration laden
     config = load_config_ini('config.ini')
     
@@ -39,12 +40,15 @@ def main(useCache=False):
         student_address = student['address']
         results_csv = [student_id, student_address]
         results_json = {'address': student_address, 'schools': {}}
+        
+        response_time = time.time()
+        
         for school in schools_dict:
             school_id = school['school_id']
             school_address = school['address']
             
             # use chached responses to save api requests
-            if useCache:
+            if use_cache:
                 with open(response_json_path, 'r') as file:
                     response_dict = json.load(file)
                 response = {}
@@ -65,7 +69,8 @@ def main(useCache=False):
                 break
 
             # Speichern der API Response in response.json
-            append_response_json(response['response'], response_json_path, student_id, school_id, response['response_time'])
+            if not use_cache:
+                append_response_json(response['response'], response_json_path, student_id, school_id, response['response_time'])
 
             parsed = parse_response(response)
             results_csv.append(parsed["duration"])
@@ -81,8 +86,12 @@ def main(useCache=False):
         # Ergebnisse in CSV und JSON speichern
         append_output_csv(results_csv, output_csv_path)
         append_output_json(student_id, results_json, output_json_path)
+        
+        response_time = time.time() - response_time
+        print(f"Gesamtzeit für Schüler {student_id}: {response_time} sec")
 
-def reset_output_files(useCache=False):
+
+def reset_output_files(use_cache=False):
     # Konfiguration laden
     config = load_config_ini('config.ini')
     
@@ -99,7 +108,7 @@ def reset_output_files(useCache=False):
         output_json_file.truncate(0)  # Datei leeren (wenn sie existiert)
         json.dump({}, output_json_file)
     
-    if not useCache:
+    if not use_cache:
         with open(response_json_path, 'w') as response_json_file:
             response_json_file.truncate(0)  # Datei leeren (wenn sie existiert)
             json.dump({}, response_json_file)
@@ -109,6 +118,6 @@ def reset_output_files(useCache=False):
     
 
 if __name__ == '__main__':
-    useChache = True
-    reset_output_files(useChache)
-    main(useChache)
+    use_cache = True
+    reset_output_files(use_cache)
+    main(use_cache)
