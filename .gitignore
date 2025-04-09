@@ -398,3 +398,16 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# venv
+.venv
+.env
+
+# testfiles
+test/
+temp/
+
+# sensible data files
+output/*
+input/*
+config.ini
