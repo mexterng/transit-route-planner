@@ -55,6 +55,7 @@ def main(use_cache=False):
                 response['response'] = response_dict[student_id][school_id]['response']
                 response['response_time'] = response_dict[student_id][school_id]['response_time']
                 response['response']['status'] = 'OK'
+                response_time -= response['response_time']
             else:
                 response = query_connection(config.api_key, student_address, school_address, config.datetime)
             
@@ -81,7 +82,7 @@ def main(use_cache=False):
                 "duration": parsed["duration"],
                 "transfers": parsed["transfers"]
             }
-            sleep(1)  # Rate limit einhalten
+            sleep(0.1)  # Rate limit einhalten
 
         # Ergebnisse in CSV und JSON speichern
         append_output_csv(results_csv, output_csv_path)
