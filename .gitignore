@@ -408,7 +408,7 @@ test/
 temp/
 
 # sensible data files
-!.gitkeep
 output/*
 input/*
 config.ini
+!.gitkeep
