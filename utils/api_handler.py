@@ -1,23 +1,30 @@
 import requests
 import time
 import datetime
-from typing import Dict
+from typing import Dict, List
 
-def query_connection(api_key: str, origin: str, destination: str, arrival_time_str: str) -> Dict:
-    url = 'https://maps.googleapis.com/maps/api/directions/json'
-    arrival_time_unix = int(datetime.datetime.strptime(arrival_time_str, '%Y-%m-%dT%H:%M:%S').timestamp())
-    params = {
-        'origin': origin,
-        'destination': destination,
-        'mode': 'transit',
-        'arrival_time': arrival_time_unix,
-        'key': api_key,
-        'transit_routing_preference': 'fewer_transfers',
-        'language': 'de'
+def query_connection(api_key: str, origin: str, destinations: list, arrival_time_str: str) -> dict:
+    url = 'https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix'
+    headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': api_key,
+        'X-Goog-FieldMask': '*'}
+
+    arrival_time_rfc3339 = datetime.datetime.strptime(arrival_time_str, '%Y-%m-%dT%H:%M:%S').isoformat() + 'Z'
+    destination_list = [{'waypoint': {'address': school['address']}} for school in destinations]
+    body = {
+        'origins': [{'waypoint': {'address': origin}}],
+        'destinations': destination_list,
+        'travelMode': 'TRANSIT',
+        'arrivalTime': arrival_time_rfc3339,
+        'languageCode': 'de',
+        'transitPreferences': {
+            'routingPreference': 'FEWER_TRANSFERS',
+        }
     }
     try:
         response_time = time.time()
-        response = requests.get(url, params=params, timeout=10)
+        response = requests.post(url, headers=headers, json=body, timeout=10)
         response_time = time.time() - response_time
         response.raise_for_status()
         return {'response_time': response_time, 'response': response.json()}
