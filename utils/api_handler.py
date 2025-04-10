@@ -36,7 +36,7 @@ def parse_response(data: Dict) -> Dict[str, int]:
         departure_time = leg['departure_time']['text']
         arrival_time = leg['arrival_time']['text']
         duration = leg['duration']['value'] // 60  # seconds to minutes
-        transfers = sum(1 for step in leg['steps'] if step.get('travel_mode') == 'TRANSIT')
+        transfers = sum(1 for step in leg['steps'] if step.get('travel_mode') == 'TRANSIT') - 1
         return {'address': address, 'departure_time': departure_time, 'arrival_time': arrival_time, 'duration': duration, 'transfers': transfers}
     except (KeyError, IndexError, TypeError):
         return {'address': '', 'departure_time': -1, 'arrival_time': -1, 'duration': -1, 'transfers': -1}
