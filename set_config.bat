@@ -1,0 +1,1 @@
+.venv\Scripts\python.exe set_config.py
