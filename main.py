@@ -39,7 +39,7 @@ def main(use_cache=False):
         student_id = student['student_id']
         student_address = student['address']
         results_csv = [student_id, student_address]
-        results_json = {'address': student_address, 'schools': {}}
+        output_json = {'address': student_address, 'schools': {}}
         
         response_time = time.time()
         
@@ -78,15 +78,12 @@ def main(use_cache=False):
             results_csv.append(parsed["transfers"])
 
             # Ergebnisse für JSON
-            results_json["schools"][str(school_id)] = {
-                "duration": parsed["duration"],
-                "transfers": parsed["transfers"]
-            }
+            output_json["schools"][str(school_id)] = parsed
             sleep(0.1)  # Rate limit einhalten
 
         # Ergebnisse in CSV und JSON speichern
         append_output_csv(results_csv, output_csv_path)
-        append_output_json(student_id, results_json, output_json_path)
+        append_output_json(student_id, output_json, output_json_path)
         
         response_time = time.time() - response_time
         print(f"Gesamtzeit für Schüler {student_id}: {response_time} sec")

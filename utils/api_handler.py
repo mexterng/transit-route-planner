@@ -28,12 +28,15 @@ def query_connection(api_key: str, origin: str, destination: str, arrival_time_s
 def parse_response(data: Dict) -> Dict[str, int]:
     response = data['response']
     if response.get('status') != 'OK' or not response.get('routes'):
-        return {"duration": -1, "transfers": -1}
+        return {'address': '', 'departure_time': -1, 'arrival_time': -1, 'duration': -1, 'transfers': -1}
 
     try:
         leg = response['routes'][0]['legs'][0]
+        address = leg['end_address']
+        departure_time = leg['departure_time']['text']
+        arrival_time = leg['arrival_time']['text']
         duration = leg['duration']['value'] // 60  # seconds to minutes
         transfers = sum(1 for step in leg['steps'] if step.get('travel_mode') == 'TRANSIT')
-        return {"duration": duration, "transfers": transfers}
+        return {'address': address, 'departure_time': departure_time, 'arrival_time': arrival_time, 'duration': duration, 'transfers': transfers}
     except (KeyError, IndexError, TypeError):
-        return {"duration": -1, "transfers": -1}
+        return {'address': '', 'departure_time': -1, 'arrival_time': -1, 'duration': -1, 'transfers': -1}
