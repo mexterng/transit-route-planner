@@ -35,36 +35,50 @@ def main(use_cache=False):
     
     # API-Abfragen durchführen
     for student in students_dict:
+        student_api_fails = 0
         student_id = student['student_id']
         student_address = student['address']
         results_csv = [student_id, student_address]
         output_json = {'address': student_address, 'schools': {}}
         
         response_time = time.time()
-                
-        # use chached responses to save api requests
-        if use_cache:
-            with open(response_json_path, 'r') as file:
-                response_dict = json.load(file)
-            response = {}
-            response['response'] = response_dict[student_id]['response']
-            response['response_time'] = response_dict[student_id]['response_time']
-            response['response']['status'] = 'OK'
-            response_time -= response['response_time']
-        else:
-            response = query_connection(config.api_key, student_address, schools_dict, config.datetime)     
+        
+        for school in schools_dict:
+            school_id = school['school_id']
+            school_address = school['address']
+            
+            # use chached responses to save api requests
+            if use_cache:
+                with open(response_json_path, 'r') as file:
+                    response_dict = json.load(file)
+                response = {}
+                response['response'] = response_dict[student_id][school_id]['response']
+                response['response_time'] = response_dict[student_id][school_id]['response_time']
+                response['response']['status'] = 'OK'
+                response_time -= response['response_time']
+            else:
+                response = query_connection(config.api_key, student_address, school_address, config.datetime)
+            
+            if response['response']['status'] != 'OK':
+                student_api_fails += 1
+                print_str = "REQUEST_FAILED"
+            else:
+                print_str = "OK"
+            print(f"{student_id} für Schule {school_id}: {print_str} ({response['response_time']})")
+            
+            if student_api_fails > 5:
+                break
 
-        # Speichern der API Response in response.json
-        if not use_cache:
-            append_response_json(response['response'], response_json_path, student_id, student_id, response['response_time'])
+            # Speichern der API Response in response.json
+            if not use_cache:
+                append_response_json(response['response'], response_json_path, student_id, school_id, response['response_time'])
 
-        parsed = parse_response(response)
-        results_csv.append(parsed["duration"])
-        results_csv.append(parsed["transfers"])
+            parsed = parse_response(response)
+            results_csv.append(parsed["duration"])
+            results_csv.append(parsed["transfers"])
 
-        # Ergebnisse für JSON
-        output_json["schools"] = parsed
-        sleep(0.1)  # Rate limit einhalten
+            # Ergebnisse für JSON
+            output_json["schools"][str(school_id)] = parsed
 
         # Ergebnisse in CSV und JSON speichern
         append_output_csv(results_csv, output_csv_path)
@@ -101,6 +115,6 @@ def reset_output_files(use_cache=False):
     
 
 if __name__ == '__main__':
-    use_cache = False
+    use_cache = True
     reset_output_files(use_cache)
     main(use_cache)
