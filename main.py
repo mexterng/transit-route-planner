@@ -79,7 +79,6 @@ def main(use_cache=False):
 
             # Ergebnisse für JSON
             output_json["schools"][str(school_id)] = parsed
-            sleep(0.1)  # Rate limit einhalten
 
         # Ergebnisse in CSV und JSON speichern
         append_output_csv(results_csv, output_csv_path)
