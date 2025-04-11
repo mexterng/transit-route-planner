@@ -77,7 +77,7 @@ Neben der direkten Änderung in ``config.ini`` ist es auch möglich über eine G
     0002;Dorfplatz 2, 12345 Berlin
     0003;Marktplatz 3, 12345 Berlin
     ```
-2. ``students.csv```
+2. ``students.csv``
     
     Enthält die Liste der Schüler mit ihrer einzigartigen ``student_id`` und der ``address``.
 
