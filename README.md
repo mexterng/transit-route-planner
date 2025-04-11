@@ -16,8 +16,11 @@ Dieses Python-Projekt berechnet die Reisedauer und die Anzahl der Umstiege für 
 │   ├── config_loader.py   # Lädt die Konfigurationsdatei
 │   ├── file_handler.py    # Speichert die Ergebnisse in verschiedenen Formaten
 ├── main.py                # Hauptskript, das die API-Anfragen ausführt und die Ergebnisse speichert
+├── main.bat               # Hauptskript für Konsole, das die API-Anfragen ausführt und die Ergebnisse speichert
 ├── requirements.txt       # Python-Abhängigkeiten
 ├── config.ini             # Konfigurationsdatei für das Projekt
+├── set_config.py          # Configskript, das die config.ini Datei über eine GUI öffnet
+├── set_config.bat         # Configskript für Konsole, das die config.ini Datei über eine GUI öffnet
 ```
 ## Anforderungen
 - Python 3.x
@@ -49,7 +52,7 @@ Die Konfiguration wird in der Datei ``config.ini`` gespeichert. Diese Datei soll
 
 ```ini
 [GENERAL]
-datetime = 2025-04-10T08:00:00   # Das Datum und die Uhrzeit, zu der die Ankunft geplant ist
+datetime = 2025-04-10T08:00:00   # Das Datum und die Uhrzeit, zu der die Ankunft geplant ist. ACHTUNG: max. 7 Tage in die Vergangenheit und max. 100 Tage in die Zukunft.
 
 [FILES]
 students_csv = input/students.csv    # Pfad zur Schüler-CSV-Datei
@@ -59,6 +62,8 @@ output_folder = output               # Ordner, in dem die Ausgabedateien gespeic
 [API]
 api_key = YOUR_GOOGLE_API_KEY       # API-Schlüssel für Google Maps Directions API
 ```
+
+Neben der direkten Änderung in ``config.ini`` ist es auch möglich über eine GUI ``set_config.py`` bzw. ``set_config.bat`` zu verändern.
 
 ## Verwendung
 ### Eingabedateien
@@ -89,7 +94,7 @@ api_key = YOUR_GOOGLE_API_KEY       # API-Schlüssel für Google Maps Directions
 - ``file_handler.py``: Verantwortlich für das Speichern der Ergebnisse in CSV- und JSON-Formaten. Es fügt Daten zu den Ausgabedateien hinzu oder erstellt neue, falls sie nicht existieren.
 
 ### Hauptskript
-``main.py``: Das Hauptskript, das:
+``main.py`` bzw. ``main.bat``: Das Hauptskript, das:
 - Die Konfiguration und Eingabedateien lädt.
 - Die Schüler- und Schul-Daten durchläuft, um Reisedaten von der API abzufragen.
 - Die Ergebnisse in output.csv, output.json und response.json speichert.
