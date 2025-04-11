@@ -135,9 +135,8 @@ Nach der Ausführung des Skripts werden die Ergebnisse in den folgenden Dateien 
 - ``output.csv:``
     ```python-repl
     student_id;address;0531_duration;0531_transfers;0758_duration;0758_transfers;0688_duration;0688_transfers
-    9543708;Aachener Strasse 13, 80804;45;1;55;2;30;1
-    9246033;Abbachstraße 20, 80992;50;2;60;3;35;1
-    5972663;Adam-Berg-Str. 184A, 81735;60;1;70;2;40;1
+    9543708;Marktplatz 1, 12345;45;1;55;2;30;1
+    9246033;Dorfplatz 2, 12345;50;2;60;3;35;1
     ...
     ```
 
