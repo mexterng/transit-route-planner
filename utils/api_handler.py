@@ -34,7 +34,11 @@ def query_connection(api_key: str, origin: str, destination: str, arrival_time_s
     except requests.RequestException as e:
         print(f"Fehler bei API-Anfrage: {e}")
         print(response.content)
-        return {'response_time': -1, 'response': {'status': "REQUEST_FAILED"}}
+        response = response.json()
+        return {'response_time': -1, 'response': {'status': response['error']['status']}}
+    except KeyError as e:
+        print(response)
+        return {'response_time': -1, 'response': {'status': "EMPTY_RESPONSE"}}
 
 def parse_response(data: Dict) -> Dict[str, int]:
     response = data['response']
