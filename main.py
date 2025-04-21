@@ -61,10 +61,7 @@ def main(use_cache=False):
             
             if response['response']['status'] != 'OK':
                 student_api_fails += 1
-                print_str = "REQUEST_FAILED"
-            else:
-                print_str = "OK"
-            print(f"{student_id} für Schule {school_id}: {print_str} ({response['response_time']})")
+            print(f"{student_id} für Schule {school_id}: {response['response']['status']} ({response['response_time']})")
             
             if student_api_fails > 5:
                 break
