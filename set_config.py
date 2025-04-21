@@ -4,7 +4,7 @@ from pathlib import Path
 import configparser
 from utils.config_loader import load_config_ini, Config  # Angepasster Import
 from tkcalendar import DateEntry
-from datetime import datetime
+from datetime import datetime, timedelta
 
 CONFIG_PATH = Path("config.ini")
 
@@ -27,10 +27,12 @@ class ConfigEditor(tk.Tk):
         date_time_frame.grid(row=0, column=0, columnspan=3, sticky="ew", pady=5)
 
         # Datumsauswahl
+        min_date = datetime.now().date() - timedelta(days=6)
+        max_date = datetime.now().date() + timedelta(days=99)
         ttk.Label(date_time_frame, text="Datum:").grid(row=0, column=0, sticky="w", padx=(0, 5))
         dt_obj = datetime.strptime(self.config_data.datetime, "%Y-%m-%dT%H:%M:%S")
         self.date_entry = DateEntry(date_time_frame, width=12, background='darkblue', foreground='white', borderwidth=2, 
-                                    date_pattern='dd.mm.yyyy', locale='de_DE')
+                                    date_pattern='dd.mm.yyyy', locale='de_DE', mindate=min_date, maxdate=max_date)
         self.date_entry.set_date(dt_obj.date())
         self.date_entry.grid(row=0, column=1, sticky="w", padx=(0, 10))
 
