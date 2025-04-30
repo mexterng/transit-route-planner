@@ -48,27 +48,31 @@ def main(use_cache=False):
             school_address = school['address']
             
             # use chached responses to save api requests
+            cache_used = ""
             if use_cache:
                 with open(response_json_path, 'r') as file:
                     response_dict = json.load(file)
                 response = {}
-                response['response'] = response_dict[student_id][school_id]['response']
-                response['response_time'] = response_dict[student_id][school_id]['response_time']
-                response['response']['status'] = 'OK'
-                response_time -= response['response_time']
+                if student_id in response_dict and school_id in response_dict[student_id]:
+                    response['response'] = response_dict[student_id][school_id]['response']
+                    response['response_time'] = response_dict[student_id][school_id]['response_time']
+                    response['response']['status'] = 'OK'
+                    response_time -= response['response_time']
+                    cache_used = "aus cache"
+                else:
+                    response = query_connection(config.api_key, student_address, school_address, config.datetime)
             else:
                 response = query_connection(config.api_key, student_address, school_address, config.datetime)
             
             if response['response']['status'] != 'OK':
                 student_api_fails += 1
-            print(f"{student_id} für Schule {school_id}: {response['response']['status']} ({response['response_time']})")
+            print(f"{student_id} für Schule {school_id}: {response['response']['status']} ({response['response_time']:.3f}) {cache_used}")
             
             if student_api_fails > 5:
                 break
 
             # Speichern der API Response in response.json
-            if not use_cache:
-                append_response_json(response['response'], response_json_path, student_id, school_id, response['response_time'])
+            append_response_json(response['response'], response_json_path, student_id, school_id, response['response_time'])
 
             parsed = parse_response(response)
             results_csv.append(parsed["duration"])
@@ -82,7 +86,7 @@ def main(use_cache=False):
         append_output_json(student_id, output_json, output_json_path)
         
         response_time = time.time() - response_time
-        print(f"Gesamtzeit für Schüler {student_id}: {response_time} sec")
+        print(f"===> Gesamtzeit für Schüler {student_id}: {response_time:.3f} sec\n")
 
 
 def reset_output_files(use_cache=False):
@@ -102,10 +106,9 @@ def reset_output_files(use_cache=False):
         output_json_file.truncate(0)  # Datei leeren (wenn sie existiert)
         json.dump({}, output_json_file)
     
-    if not use_cache:
-        with open(response_json_path, 'w') as response_json_file:
-            response_json_file.truncate(0)  # Datei leeren (wenn sie existiert)
-            json.dump({}, response_json_file)
+    if not os.path.exists(response_json_path):
+        with open(response_json_path, 'w') as f:
+            json.dump({}, f)
     
     with open(output_csv_path, 'w', newline='') as output_csv_file:
         output_csv_file.truncate(0)  # Datei leeren (wenn sie existiert)
