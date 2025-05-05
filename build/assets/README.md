@@ -4,8 +4,8 @@ Dieses Python-Projekt berechnet die Reisedauer und die Anzahl der Umstiege für 
 
 ## Ausführen der portablen Version
 Für die Ausführung ist lediglich der gesamte Ordner der portablen Version erforderlich, da eine portable Python-Version bereits enthalten ist. Wenn Sie das Projekt lokal installieren und verwenden möchten, lesen Sie bitte die Abschnitte [Anforderungen](#anforderungen) und [Verwendung](#verwendung).
-- Starten Sie ``set_config.bat`` (per Doppelklick oder Kommandozeile) um alle Parameter festzulegen.
-- Starten Sie ``main.bat`` (per Doppelklick oder Kommandozeile) um die Verbindungsabfragen zu starten.
+- Starten Sie ``set_config.bat`` (per Doppelklick oder Kommandozeile) um alle Parameter festzulegen. Klicken Sie auf ``Speichern`` und anschließend auf ``Start`` um die Verbindungsabfragen zu starten.
+- Alternativ starten Sie ``main.bat`` (per Doppelklick oder Kommandozeile) um die Verbindungsabfragen separat zu starten.
 - Die Ergebnisse werden im Ordner ``output/`` gespeichert.
 
 ## Projektstruktur
@@ -101,15 +101,18 @@ Neben der direkten Änderung in ``config.ini`` ist es auch möglich über eine G
 - ``file_handler.py``: Verantwortlich für das Speichern der Ergebnisse in CSV- und JSON-Formaten. Es fügt Daten zu den Ausgabedateien hinzu oder erstellt neue, falls sie nicht existieren.
 
 ### Hauptskript
-``main.py`` bzw. ``main.bat``: Das Hauptskript, das:
-- Die Konfiguration und Eingabedateien lädt.
-- Die Schüler- und Schul-Daten durchläuft, um Reisedaten von der API abzufragen.
-- Die Ergebnisse in output.csv, output.json und response.json speichert.
+1. ``config.ini``-Datei
+   Bearbeite die ``config.ini``-Datei mit Hilfe von ``set_config.bat`` bzw. ``set_config.py``
+
+2. ``main``-Datei
+   ``main.py`` bzw. ``main.bat``: Das Hauptskript, das:
+   - Die Konfiguration und Eingabedateien lädt.
+   - Die Schüler- und Schul-Daten durchläuft, um Reisedaten von der API abzufragen.
+   - Die Ergebnisse in output.csv, output.json und response.json speichert.
 
 
 Stelle sicher, dass die erforderlichen Eingabedateien (``students.csv``, ``schools.csv``) im Arbeitsverzeichnis vorhanden sind.
 
-Erstelle oder bearbeite die ``config.ini``-Datei mit der notwendigen Konfiguration (API-Schlüssel, Dateipfade usw.).
 
 Führe das Skript main.py aus:
 

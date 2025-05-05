@@ -27,6 +27,7 @@ Dieses Python-Projekt berechnet die Reisedauer und die Anzahl der Umstiege für 
 - Installierte Python-Bibliotheken:
     - requests für API-Anfragen
     - pandas für die Verarbeitung der CSV-Dateien
+    - tkcalendar für Terminauswahl
 
 Führen Sie den folgenden Befehl aus, um die Anforderungen zu installieren:
 
@@ -94,10 +95,14 @@ Neben der direkten Änderung in ``config.ini`` ist es auch möglich über eine G
 - ``file_handler.py``: Verantwortlich für das Speichern der Ergebnisse in CSV- und JSON-Formaten. Es fügt Daten zu den Ausgabedateien hinzu oder erstellt neue, falls sie nicht existieren.
 
 ### Hauptskript
-``main.py`` bzw. ``main.bat``: Das Hauptskript, das:
-- Die Konfiguration und Eingabedateien lädt.
-- Die Schüler- und Schul-Daten durchläuft, um Reisedaten von der API abzufragen.
-- Die Ergebnisse in output.csv, output.json und response.json speichert.
+1. ``config.ini``-Datei
+   Bearbeite die ``config.ini``-Datei mit Hilfe von ``set_config.bat`` bzw. ``set_config.py``
+   
+2. ``main``-Datei
+   ``main.py`` bzw. ``main.bat``: Das Hauptskript, das:
+   - Die Konfiguration und Eingabedateien lädt.
+   - Die Schüler- und Schul-Daten durchläuft, um Reisedaten von der API abzufragen.
+   - Die Ergebnisse in output.csv, output.json und response.json speichert.
 
 
 Stelle sicher, dass die erforderlichen Eingabedateien (``students.csv``, ``schools.csv``) im Arbeitsverzeichnis vorhanden sind.
