@@ -8,7 +8,7 @@ def query_connection(api_key: str, origin: str, destination: str, arrival_time_s
     headers = {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': api_key,
-        'X-Goog-FieldMask': 'routes.legs.stepsOverview.multiModalSegments.travelMode,routes.legs.duration' #,routes.legs.steps.*.*' # routes.*.*.*.*
+        'X-Goog-FieldMask': 'routes.legs.stepsOverview.multiModalSegments.travelMode,routes.legs.duration'
     }
 
     arrival_time_rfc3339 = datetime.datetime.strptime(arrival_time_str, '%Y-%m-%dT%H:%M:%S').isoformat() + 'Z'
@@ -48,11 +48,8 @@ def parse_response(data: Dict) -> Dict[str, int]:
     try:
         leg = response['routes'][0]['legs'][0]
         address = leg['end_address']
-        #departure_time = 'tba' #leg['departure_time']['text']
-        #arrival_time = 'tba' #leg['arrival_time']['text']
         duration = int(int(leg['duration'].rstrip('s')) // 60)  # seconds to minutes
         transfers = sum(1 for step in leg['stepsOverview']['multiModalSegments'] if step.get('travelMode') == 'TRANSIT') - 1
-        #return {'address': address, 'departure_time': departure_time, 'arrival_time': arrival_time, 'duration': duration, 'transfers': transfers}
         return {'address': address, 'duration': duration, 'transfers': transfers}
     except (KeyError, IndexError, TypeError):
         return {'address': '', 'departure_time': -1, 'arrival_time': -1, 'duration': -1, 'transfers': -1}

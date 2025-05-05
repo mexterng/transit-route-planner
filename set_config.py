@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 from pathlib import Path
 import configparser
-from utils.config_loader import load_config_ini, Config  # Angepasster Import
+from utils.config_loader import load_config_ini, Config
 from tkcalendar import DateEntry
 from datetime import datetime, timedelta
 
@@ -149,7 +149,6 @@ class ConfigEditor(tk.Tk):
             parser.write(configfile)
 
         messagebox.showinfo("Erfolg", "Konfigurationsdatei config.ini wurde gespeichert.")
-        self.quit()
 
 if __name__ == "__main__":
     app = ConfigEditor(CONFIG_PATH)
