@@ -5,6 +5,7 @@ import configparser
 from utils.config_loader import load_config_ini, Config
 from tkcalendar import DateEntry
 from datetime import datetime, timedelta
+import subprocess
 
 CONFIG_PATH = Path("config.ini")
 
@@ -85,6 +86,10 @@ class ConfigEditor(tk.Tk):
         cancel_btn = ttk.Button(btn_frame, text="Abbrechen", command=self.quit)
         cancel_btn.grid(row=0, column=1, padx=5, sticky="w")
 
+        # Start-Button
+        cancel_btn = ttk.Button(btn_frame, text="Start", command=self.start_main)
+        cancel_btn.grid(row=0, column=2, padx=5, sticky="w")
+
         btn_frame.grid_columnconfigure(0, weight=1)
         btn_frame.grid_columnconfigure(1, weight=1)
 
@@ -149,6 +154,18 @@ class ConfigEditor(tk.Tk):
             parser.write(configfile)
 
         messagebox.showinfo("Erfolg", "Konfigurationsdatei config.ini wurde gespeichert.")
+
+    
+    def start_main(self):
+        try:
+            script_path = Path(__file__).parent / "main.bat"
+            subprocess.Popen(
+                ['cmd.exe', '/c', 'start', '', str(script_path)],
+                shell=True
+            )
+            self.quit()
+        except Exception as e:
+            messagebox.showerror("Fehler", f"Fehler beim Starten von main.bat:\n{e}")
 
 if __name__ == "__main__":
     app = ConfigEditor(CONFIG_PATH)
