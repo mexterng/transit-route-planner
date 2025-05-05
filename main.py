@@ -8,7 +8,7 @@ from time import sleep
 import json
 import time
 
-def main(use_cache=False):
+def main(use_cache=False):   
     # Konfiguration laden
     config = load_config_ini('config.ini')
     
@@ -85,9 +85,7 @@ def main(use_cache=False):
         append_output_csv(results_csv, output_csv_path)
         append_output_json(student_id, output_json, output_json_path)
         
-        response_time = time.time() - response_time
-        print(f"===> Gesamtzeit für Schüler {student_id}: {response_time:.3f} sec\n")
-
+        print(f"===> Gesamtzeit für Schüler {student_id}: {(time.time() - response_time):.3f} sec\n")
 
 def reset_output_files(use_cache=False):
     # Konfiguration laden
@@ -115,6 +113,8 @@ def reset_output_files(use_cache=False):
     
 
 if __name__ == '__main__':
+    exec_time = time.time()
     use_cache = True
     reset_output_files(use_cache)
     main(use_cache)
+    print(f"\n\n========> Gesamtzeit für Berechnung {(time.time() - exec_time):.3f} sec\n")
