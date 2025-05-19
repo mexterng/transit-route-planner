@@ -1,5 +1,5 @@
 @echo off
 echo Starting direction search ...
 echo.
-python-embed\pythonw.exe main.py
+python-embed\python.exe main.py
 pause
